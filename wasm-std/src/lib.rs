@@ -2,11 +2,9 @@ extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_cbor;
-#[macro_use]
-extern crate serde_json;
 
 use serde::{Serialize, Deserialize};
-pub use serde_json::Value;
+
 /// Public Key wrapper
 #[derive(Serialize, Deserialize)]
 pub struct Sender(pub [u8; 32]);
@@ -19,7 +17,7 @@ impl AsRef<[u8]> for Sender {
 
 mod ffi {
     extern "C" {
-        pub fn debug(msg_ptr: *const u8, msg_len: u32);
+        pub fn debug(msg_ptr: *const u8, msg_len: usize);
 
         pub fn sender(ptr: *mut u8);
 
@@ -42,9 +40,9 @@ mod ffi {
 }
 
 /// Print debug message to the console.
-pub fn debug(msg: &str) {
+pub fn debug(msg: &[u8]) {
     unsafe {
-        ffi::debug(msg.as_ptr(), msg.len() as u32);
+        ffi::debug(msg.as_ptr(), msg.len());
     }
 }
 
@@ -66,10 +64,7 @@ where
         let args_len = ffi::args_len();
         let mut args = vec![0u8; args_len];
         ffi::args(args.as_mut_ptr());
-        let value: Value = serde_json::from_slice(&args)
-        .expect("args failed");
-        serde_json::from_value(value.clone())
-        .expect("args failed")
+        serde_cbor::from_slice(&args).expect("can't parse arguments")
     }
 }
 

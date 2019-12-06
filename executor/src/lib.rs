@@ -187,7 +187,7 @@ impl ModuleImportResolver for RuntimeImportResolver {
     }
 }
 
-pub fn execute(wasm: &[u8], func_name: &str, args: &[u8], sender: &[u8; 32], storage: &mut Storage) -> Vec<u8> {
+pub fn execute(wasm: &[u8], func_name: &str, args: &[u8], storage: &mut Storage) -> Vec<u8> {
     let module = Module::from_buffer(wasm).expect("Can't load wasm");
     let instance = ModuleInstance::new(
         &module,
@@ -201,6 +201,7 @@ pub fn execute(wasm: &[u8], func_name: &str, args: &[u8], sender: &[u8; 32], sto
         .expect("export 'memory' is not a memory")
         .clone();
 
+    let sender = &[0u8; 32];
     let mut runtime = Runtime {
         memory,
         sender,
