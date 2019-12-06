@@ -1,0 +1,14 @@
+[package]
+name = "executor-test"
+version = "0.1.0"
+authors = ["seanc"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+executor = { path = "../executor", version = "0.1.0" }
+wasm-std = { path = "../wasm-std", version = "0.1.0" }
+
+[build-dependencies]
+parity-wasm = "0.23.0"

@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "executor",
+    "wasm-std",
+]
+exclude = [
+    "executor-test",
+]
